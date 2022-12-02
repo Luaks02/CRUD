@@ -2,6 +2,7 @@ import mysql.connector
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import pandas as pd
 
 #Conexão com o servidor
 
@@ -37,16 +38,15 @@ class Galpao:
         else:
             messagebox.showinfo(title="Galpao", message="Nome do produto não pode ficar em branco.")
 
-    def alt_desc():
+    def importar():
 
-        descricao = entrada.get()
-        if len(descricao) != 0:
-            id = tree.item(tree.focus(),"values")[0]
-            mydb.execute("UPDATE galpao SET produtos_desc = %s WHERE idgalpao = %s", (descricao, id) )
-            conexao.commit()
-            entrada.delete(0,"end")
-            Galpao.read()
-            messagebox.showinfo(title="Galpao", message="Descrição alterada com sucesso!")
+        data = pd.read_csv("C:\\Users\\Avell\\Documents\\Teste\\Galpao.csv", sep=";", encoding='latin-1')
+        df = pd.DataFrame(data)
+        for row in df.itertuples():
+            mydb.execute("INSERT INTO galpao (produtos_nome, produtos_qnt, produtos_desc) VALUES (%s, %s, %s)" , (row.Produtos_nome, row.Quantidade, row.Descricao))
+        conexao.commit()
+        Galpao.read()
+        messagebox.showinfo(title="Galpao", message="Importação feita com sucesso.")
 
     def read():
 
@@ -74,6 +74,17 @@ class Galpao:
         else:
              messagebox.showinfo(title="Galpao", message="Para operar entrada e saída de produtos deve ser informado um número.")
              entrada.delete(0,"end")
+
+    def alt_desc():
+
+        descricao = entrada.get()
+        if len(descricao) != 0:
+            id = tree.item(tree.focus(),"values")[0]
+            mydb.execute("UPDATE galpao SET produtos_desc = %s WHERE idgalpao = %s", (descricao, id) )
+            conexao.commit()
+            entrada.delete(0,"end")
+            Galpao.read()
+            messagebox.showinfo(title="Galpao", message="Descrição alterada com sucesso!")
 
     def delete():
 
@@ -126,6 +137,9 @@ b_update.place(x=340,y=20)
 
 b_delete = Button(janela, text="Deletar Produto", command = Galpao.delete, relief="raised", overrelief=RIDGE, anchor=NW, font=("Verdana 12"), bg="#D3D4D3", fg="#080808")
 b_delete.place(x=490,y=20)
+
+b_importar = Button(janela, text="Importar Dados CSV", command = Galpao.importar, relief="raised", overrelief=RIDGE, anchor=NW, font=("Verdana 12"), bg="#D3D4D3", fg="#080808")
+b_importar.place(x=475,y=332)
 
 Galpao.read()
 
