@@ -16,12 +16,12 @@ mydb = conexao.cursor()
 
 # CREATE
 
-def create(nome):
-
-    nome = str(nome)
+def create():
+    nome = entrada.get()
     qnt = 0
     mydb.execute("INSERT INTO galpao (produtos_nome, produtos_qnt) VALUES (%s, %s)" , (nome,qnt))
     conexao.commit()
+    entrada.delete(0,"end")
 
 # READ
 
@@ -74,7 +74,7 @@ entrada = Entry(janela, width=100)
 entrada.focus_set()
 entrada.place(x=30, y=70)
 
-b_create = Button(janela, text="Novo Produto", command = create(entrada.get()), relief="raised", overrelief=RIDGE, anchor=NW, font=("Verdana 12"), bg="#D3D4D3", fg="#080808")
+b_create = Button(janela, text="Novo Produto", command = create, relief="raised", overrelief=RIDGE, anchor=NW, font=("Verdana 12"), bg="#D3D4D3", fg="#080808")
 b_create.place(x=30,y=20)
 
 b_read = Button(janela, text="Listar Produtos", command = read, relief="raised", overrelief=RIDGE, anchor=NW, font=("Verdana 12"), bg="#D3D4D3", fg="#080808")
