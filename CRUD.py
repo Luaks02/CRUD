@@ -17,6 +17,7 @@ mydb = conexao.cursor()
 # CRUD
 
 class Galpao:
+    """Todas as funcionalidades do CRUD estão inseridas como método nesta classe Galpao"""
     def __init__(self,id, nome,qnt,descricao):
         self.id = id
         self.nome = nome
@@ -25,6 +26,7 @@ class Galpao:
 
     if conexao.is_connected():
         messagebox.showinfo(title="Galpao", message="Conexão online")
+
 
     def create():
 
